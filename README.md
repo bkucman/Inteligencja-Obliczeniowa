@@ -1,6 +1,6 @@
 # Inteligencja-Obliczeniowa
 ## Uniwersytet Gdański
-## Studia magisterskie: Informatyka rok.1 sem.1
+## Studia magisterskie: Informatyka rok.1 sem.1, 2018/19
 ### Repozytorium zawiera projekty tworzone na laboratoria Intelignecji obliczeniowej
 Projekty zaimplementowane za pomocą języka R.
 ### Projekt1 - Algorytm genetyczny
