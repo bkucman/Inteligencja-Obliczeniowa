@@ -204,7 +204,7 @@ modelHeart <- naiveBayes(target ~ ., data = heart.disase.train.NB)
 # z normalizacją
 predicted.naiveBayes <- predict(modelHeart, newdata = heart.disase.norm.test)
 
-#conf.matrix.naiveBayes <- table(predicted.naiveBayes,heart.disase.test$target)
+#conf.matrix.naiveBayes <- table(heart.disase.test$target,predicted.naiveBayes)
 
 # z normalizacją
 conf.matrix.naiveBayes <- table(heart.disase.norm.test$target,predicted.naiveBayes)
@@ -229,6 +229,9 @@ model.SVM <- svm(target ~ ., data = heart.disase.norm.train, type='C-classificat
 
 #print(model.SVM)
 #summary(model.SVM)
+
+#predicted.SVM <- predict(model.SVM, newdata = heart.disase.test)
+#conf.matrix.SVM <- table(heart.disase.test$target,predicted.SVM)
 
 # z normalizacją
 predicted.SVM <- predict(model.SVM, newdata = heart.disase.norm.test)
@@ -334,19 +337,23 @@ install.packages("arules")
 library(arules)
 install.packages("arulesViz")
 library(arulesViz)
+
+remove.packages("arules",lib = NULL)
+
+
 mat1 <- data.frame(
-  age = as.character(heart.disase.ready[1:303,1:1])
-  ,sex = as.character(heart.disase.ready[1:303,2:2])
-  #,cp = as.character(heart.disase.ready[1:303,3:3])
+  #age = as.character(heart.disase.ready[1:303,1:1])
+  #sex = as.character(heart.disase.ready[1:303,2:2])
+  cp = as.character(heart.disase.ready[1:303,3:3])
   #,trestbps = as.character(heart.disase.ready[1:303,4:4])
   #,chol = as.character(heart.disase.ready[1:303,5:5])
-  #,fbs = as.character(heart.disase.ready[1:303,6:6])
+  ,fbs = as.character(heart.disase.ready[1:303,6:6])
   #,restecg = as.character(heart.disase.ready[1:303,7:7])
   #,thalach = as.character(heart.disase.ready[1:303,8:8])
   #,exang = as.character(heart.disase.ready[1:303,9:9])
   #,oldpeak = as.character(heart.disase.ready[1:303,10:10])
-  #,slope = as.character(heart.disase.ready[1:303,11:11])
-  ,ca = as.character(heart.disase.ready[1:303,12:12])
+  ,slope = as.character(heart.disase.ready[1:303,11:11])
+  #,ca = as.character(heart.disase.ready[1:303,12:12])
   #,thal = as.character(heart.disase.ready[1:303,13:13])
   ,target = as.character(heart.disase.ready[1:303,14:14])
   ,stringsAsFactors = TRUE);
@@ -366,6 +373,8 @@ redundant <- colSums(subset.matrix, na.rm=T) >= 1
 rules.pruned <- rules.sorted[!redundant]
 
 print(inspect(rules.pruned))
+
+plot(rules, method="graph", control=list(type="items"))
 
 str(heart.disase.ready)
 rules <- apriori(heart.disase.ready)
@@ -441,8 +450,4 @@ barplot(data.fbs,main="Wysoki cukier",
         names.arg = c("Zachorowania","Zdrowi"))
 legend(0.8,30, legend=c("Liczba osób z wysokim\n cukrem - 45\n")
        , lty=1:1, cex=1.3)
-
-
-
-  
   
