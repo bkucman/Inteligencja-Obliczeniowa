@@ -8,6 +8,7 @@ LAB12/
 docs/
 odd/
 logs2/
+data/
 
 # Sprawozdania
 Spraw*.*
@@ -57,3 +58,4 @@ rsconnect/
 ~*
 *.log
 *.tmp
+.Rproj.user
