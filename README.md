@@ -11,6 +11,6 @@ Celem projektu było na podstawie bazy danych użycie klasyfikatorów i sprawdze
 i podzielona na części treningową i testową. Skuteczność to np. przewidywanie zachorowania na podstawie wyników pacjenta. Klasyfikatory C4.5/ID3 (drzewo), kNN, naiveBayes, SVM.
 Projekt zawierał też użycie metody grupowania k-średnich oraz znalezienie regół asocjacji.
 ### Projekt3 - Sieci neuronowe
-Sieć nauronowa z wykorzystaniem neuralnet ...(więcej opisu wkótce
+Sieć nauronowa z wykorzystaniem neuralnet ...(więcej opisu wkrótce)
 ### Projekt4 - Przetwarzanie obrazu
 ... w trakcie prac ... 
