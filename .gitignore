@@ -2,6 +2,21 @@
 .Rhistory
 .Rapp.history
 
+#direcotries with data
+train/
+LAB12/
+docs/
+odd/
+logs2/
+
+# Sprawozdania
+Spraw*.*
+
+
+# Others
+*.RData
+*.zip
+
 # Session Data files
 .RData
 
