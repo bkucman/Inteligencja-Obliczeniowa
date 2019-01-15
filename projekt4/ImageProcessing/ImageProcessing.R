@@ -6,7 +6,9 @@ install.packages("mxnet")
 install.packages("pbapply")
 
 image_dirNormal <- "..\\data\\chest_xray\\train\\NORMAL"
-image_dirPneumonia <- "..\\data\\chest_xray\\train\\pneumonia"
+image_dirPneumonia <- "..\\data\\chest_xray\\train\\PNEUMONIA"
+test_image_dirNormal <- "..\\data\\chest_xray\\test\\NORMAL"
+test_image_dirPneumonia <- "..\\data\\chest_xray\\test\\PNEUMONIA"
 
 install.packages("BiocManager")
 BiocManager::install("EBImage")
@@ -66,6 +68,21 @@ pneumonia_data <- extract_feature(dir_path = image_dirPneumonia, width = width, 
 normal_data <- extract_feature(dir_path = image_dirNormal, width = width, height = height, is_pneumonia = FALSE)
 dim(cats_data)
 
+pneumonia_test_data <- extract_feature(dir_path = test_image_dirPneumonia, width = width, height = height)
+normal_test_data <- extract_feature(dir_path = test_image_dirNormal, width = width, height = height, is_pneumonia = FALSE)
+
 saveRDS(pneumonia_data, "pneumonia.rds")
 saveRDS(normal_data, "normal.rds")
+saveRDS(pneumonia_test_data, "pneumonia_test.rds")
+saveRDS(normal_tes_data, "normal_test.rds")
 
+install.packages("caret")
+library(caret)
+
+## Bind rows in a single dataset
+complete_set <- rbind(cats_data, dogs_data)
+## test/training partitions
+training_index <- createDataPartition(complete_set$label, p = .9, times = 1)
+training_index <- unlist(training_index)
+train_set <- complete_set[training_index,]
+dim(train_set)
