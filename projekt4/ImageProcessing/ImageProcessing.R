@@ -142,10 +142,10 @@ mx.set.seed(100)
 ## Device used. 
 device <- mx.cpu()
 
-for (n in c(10,15,20,25,30,35)){
+
 model_CNN <- mx.model.FeedForward.create(NN_model, X = train_array, y = train_y,
                                      ctx = device,
-                                     num.round = n,
+                                     num.round = 30,
                                      array.batch.size = 100,
                                      learning.rate = 0.05,
                                      momentum = 0.9,
@@ -157,9 +157,9 @@ model_CNN <- mx.model.FeedForward.create(NN_model, X = train_array, y = train_y,
 predict_CNN <- predict(model_CNN, test_array)
 predicted_labels_CNN <- max.col(t(predict_CNN)) - 1
 #table(test_data[, 1], predicted_labels_CNN)
-print(n)
+
 print(sum(diag(table(test_data[, 1], predicted_labels_CNN)))/624)
-}
+
 
 ### Random Forest 
 
@@ -190,7 +190,7 @@ require(dplyr)
 labels_GBM <- data_for_forest$label 
 data_for_GBM <- select(data_for_forest, -label)
 
-trees <- 2000
+trees <- 1000
 model_GBM <- gbm.fit(
   x = data_for_GBM,
   y = labels_GBM,
@@ -216,7 +216,5 @@ model.SVM <- svm(label ~ ., data = train_data, type='C-classification',kernel='l
 
 predicted.SVM <- predict(model.SVM, newdata = test_data)
 conf.matrix.SVM <- table(test_data[,1],predicted.SVM)
-
-count()
 
 sum(diag(table(test_data[, 1], predicted.SVM)))/624
