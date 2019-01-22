@@ -70,6 +70,7 @@ extract_feature <- function(dir_path, width, height, is_pneumonia = TRUE, add_la
 pneumonia_data <- extract_feature(dir_path = image_dirPneumonia, width = width, height = height)
 normal_data <- extract_feature(dir_path = image_dirNormal, width = width, height = height, is_pneumonia = FALSE)
 dim(pneumonia_data)
+dim(normal_data)
 
 # calculating test images to vector of pixels
 pneumonia_test_data <- extract_feature(dir_path = test_image_dirPneumonia, width = width, height = height)
@@ -141,10 +142,10 @@ mx.set.seed(100)
 ## Device used. 
 device <- mx.cpu()
 
-
+for (n in c(10,15,20,25,30,35)){
 model_CNN <- mx.model.FeedForward.create(NN_model, X = train_array, y = train_y,
                                      ctx = device,
-                                     num.round = 30,
+                                     num.round = n,
                                      array.batch.size = 100,
                                      learning.rate = 0.05,
                                      momentum = 0.9,
@@ -153,12 +154,12 @@ model_CNN <- mx.model.FeedForward.create(NN_model, X = train_array, y = train_y,
                                      epoch.end.callback = mx.callback.log.train.metric(100))
 
 ## Test CNN classifier
-predict_CNN <- predict(model, test_array)
+predict_CNN <- predict(model_CNN, test_array)
 predicted_labels_CNN <- max.col(t(predict_CNN)) - 1
-table(test_data[, 1], predicted_labels_CNN)
-
-sum(diag(table(test_data[, 1], predicted_labels_CNN)))/624
-
+#table(test_data[, 1], predicted_labels_CNN)
+print(n)
+print(sum(diag(table(test_data[, 1], predicted_labels_CNN)))/624)
+}
 
 ### Random Forest 
 
@@ -176,10 +177,10 @@ labels <- as.factor(labels)
 data_ready <- data_for_forest[,-1]
 
 
-model_randomForest = randomForest(data, labels, ntree = 30, maxnodes = 30)
+model_randomForest = randomForest(data, labels, ntree = 1000, maxnodes = 30)
 
 predict_randomForest = predict(model_randomForest, data_for_forest_test[,-1], type = "class")
-table = table(data_for_forest_test[,1],predict_randomForest)
+table(data_for_forest_test[,1],predict_randomForest)
 sum(diag(table(data_for_forest_test[,1], predict_randomForest )))/624
 
 ## Gradient boosting
@@ -189,6 +190,7 @@ require(dplyr)
 labels_GBM <- data_for_forest$label 
 data_for_GBM <- select(data_for_forest, -label)
 
+trees <- 2000
 model_GBM <- gbm.fit(
   x = data_for_GBM,
   y = labels_GBM,
@@ -197,17 +199,14 @@ model_GBM <- gbm.fit(
   interaction.depth = 3,
   n.minobsinnode = 10,
   verbose=F,
-  n.trees = 600
+  n.trees = trees
 )
 
-predicted.GBM <- predict(model_GBM, newdata = data_for_forest_test[,-1], n.trees = 600,type = "response")
-
-predicted.GBM <- predict(object = model_GBM, newdata=data_for_forest_test[,-1],
-                         n.trees = 2000, type = "response")
+predicted.GBM <- predict(model_GBM, newdata = data_for_forest_test[,-1], n.trees = trees,type = "response")
 
 predicted.GBM_round <- round(predicted.GBM)
 
-table.GBM <- table(data_for_forest_test[,1],predicted.GBM_round)
+table(data_for_forest_test[,1],predicted.GBM_round)
 sum(diag(table(data_for_forest_test[,1], predicted.GBM_round)))/624
 
 # SVM
