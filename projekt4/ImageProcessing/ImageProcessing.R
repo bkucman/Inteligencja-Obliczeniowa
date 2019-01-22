@@ -19,14 +19,16 @@ library(randomForest)
 library(gbm)
 library(e1071)
 
-# windows
+# images, windows path
 image_dirNormal <- "..\\data\\chest_xray\\train\\NORMAL"
 image_dirPneumonia <- "..\\data\\chest_xray\\train\\PNEUMONIA"
 test_image_dirNormal <- "..\\data\\chest_xray\\test\\NORMAL"
 test_image_dirPneumonia <- "..\\data\\chest_xray\\test\\PNEUMONIA"
 
+
 width <- 28
 height <- 28
+# extract_feature based on toturial Image Classification in R: MXNet - Shikun Li
 ## pbapply is a library to add progress bar *apply functions
 ## pblapply will replace lapply
 library(pbapply)
