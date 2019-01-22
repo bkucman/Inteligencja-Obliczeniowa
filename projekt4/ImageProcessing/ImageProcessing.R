@@ -75,6 +75,8 @@ dim(pneumonia_data)
 pneumonia_test_data <- extract_feature(dir_path = test_image_dirPneumonia, width = width, height = height)
 normal_test_data <- extract_feature(dir_path = test_image_dirNormal, width = width, height = height, is_pneumonia = FALSE)
 
+dim(pneumonia_test_data)
+dim(normal_test_data)
 # save ready matrix with vectors of images
 saveRDS(pneumonia_data, "pneumonia.rds")
 saveRDS(normal_data, "normal.rds")
@@ -173,10 +175,11 @@ labels <- as.factor(labels)
 # data
 data_ready <- data_for_forest[,-1]
 
+
 model_randomForest = randomForest(data, labels, ntree = 30, maxnodes = 30)
 
 predict_randomForest = predict(model_randomForest, data_for_forest_test[,-1], type = "class")
-table = table(predict_randomForest , data_for_forest_test[,1])
+table = table(data_for_forest_test[,1],predict_randomForest)
 sum(diag(table(data_for_forest_test[,1], predict_randomForest )))/624
 
 ## Gradient boosting
@@ -194,25 +197,27 @@ model_GBM <- gbm.fit(
   interaction.depth = 3,
   n.minobsinnode = 10,
   verbose=F,
-  n.trees = 2000
+  n.trees = 600
 )
 
-predicted.GBM <- predict(model_GBM, newdata = data_for_forest_test[,-1], n.trees = 1000,type = "response")
+predicted.GBM <- predict(model_GBM, newdata = data_for_forest_test[,-1], n.trees = 600,type = "response")
 
 predicted.GBM <- predict(object = model_GBM, newdata=data_for_forest_test[,-1],
                          n.trees = 2000, type = "response")
 
 predicted.GBM_round <- round(predicted.GBM)
 
-table.GBM <- table(predicted.GBM_round, data_for_forest_test[,1])
+table.GBM <- table(data_for_forest_test[,1],predicted.GBM_round)
 sum(diag(table(data_for_forest_test[,1], predicted.GBM_round)))/624
 
-# SVM  ###### dobre
+# SVM
 
 model.SVM <- svm(label ~ ., data = train_data, type='C-classification',kernel='linear',
                  scale=FALSE)
 
 predicted.SVM <- predict(model.SVM, newdata = test_data)
 conf.matrix.SVM <- table(test_data[,1],predicted.SVM)
+
+count()
 
 sum(diag(table(test_data[, 1], predicted.SVM)))/624
