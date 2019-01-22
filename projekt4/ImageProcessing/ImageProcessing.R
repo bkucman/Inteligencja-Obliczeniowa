@@ -25,7 +25,6 @@ image_dirPneumonia <- "..\\data\\chest_xray\\train\\PNEUMONIA"
 test_image_dirNormal <- "..\\data\\chest_xray\\test\\NORMAL"
 test_image_dirPneumonia <- "..\\data\\chest_xray\\test\\PNEUMONIA"
 
-
 width <- 28
 height <- 28
 # extract_feature based on toturial Image Classification in R: MXNet - Shikun Li
@@ -37,9 +36,6 @@ extract_feature <- function(dir_path, width, height, is_pneumonia = TRUE, add_la
   ## List images in path
   images_names <- list.files(dir_path)
   if (add_label) {
-    ## Select only cats or dogs images
-    # images_names <- images_names[grepl(ifelse(is_cat, "cat", "dog"), images_names)]
-    ## Set label, cat = 0, dog = 1
     ## labels pneumonia = 0, normal = 1
     label <- ifelse(is_pneumonia, 0, 1)
   }
